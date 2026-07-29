@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="An educator-friendly YouTube video search, verification, and embed-code builder." />
+  <title>YouTube Video Filter | Educator Resource Builder</title>
+  <style>
+    :root {
+      --bg: #f6f2ea;
+      --surface: #fffdf8;
+      --surface-2: #f1ece3;
+      --ink: #17333a;
+      --muted: #5c6d70;
+      --teal: #087f78;
+      --teal-dark: #05645f;
+      --teal-soft: #d9f0ec;
+      --gold: #d69b2d;
+      --danger: #a63d40;
+      --border: #d8d4cc;
+      --focus: #1f6feb;
+      --shadow: 0 14px 34px rgba(34, 49, 52, 0.12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(8,127,120,.09), transparent 32rem),
+        var(--bg);
+      line-height: 1.5;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    a { color: var(--teal-dark); }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 0;
+      background: #fff;
+      color: #000;
+      padding: .75rem 1rem;
+      z-index: 100;
+    }
+    .skip-link:focus { left: 1rem; top: 1rem; }
+
+    .app-shell { width: min(1080px, calc(100% - 28px)); margin: 28px auto 56px; }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(255,255,255,.92), rgba(239,248,246,.96));
+      border: 1px solid rgba(8,127,120,.18);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 5vw, 48px);
+      text-align: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .45rem .8rem;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal-dark);
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 14px 0 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.1rem, 6vw, 4.2rem);
+      line-height: 1;
+      letter-spacing: -.035em;
+    }
+    .subtitle { max-width: 760px; margin: 0 auto; color: var(--muted); font-size: 1.08rem; }
+
+    .stepper {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: white;
+    }
+    .step-tab {
+      border: 0;
+      border-right: 1px solid var(--border);
+      background: white;
+      min-height: 78px;
+      padding: 10px;
+      color: var(--muted);
+      font-weight: 750;
+    }
+    .step-tab:last-child { border-right: 0; }
+    .step-tab[aria-selected="true"] { background: var(--teal-soft); color: var(--teal-dark); }
+    .step-num {
+      display: grid;
+      place-items: center;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      margin: 0 auto 5px;
+      background: var(--surface-2);
+      color: var(--ink);
+      font-size: .82rem;
+    }
+    .step-tab[aria-selected="true"] .step-num { background: var(--teal); color: white; }
+
+    .panel {
+      margin-top: 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 36px);
+    }
+    .panel[hidden] { display: none; }
+    .panel-head {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-icon {
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: var(--teal-soft);
+      font-size: 1.35rem;
+    }
+    h2, h3 { margin: 0; }
+    h2 { font-size: clamp(1.35rem, 3vw, 1.8rem); }
+    .panel-head p, .hint { margin: 4px 0 0; color: var(--muted); }
+
+    .form-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+    .field { grid-column: span 12; }
+    .field.half { grid-column: span 6; }
+    .field.third { grid-column: span 4; }
+    label, legend { display: block; font-weight: 800; margin-bottom: 7px; }
+    legend { padding: 0; }
+    .required::after { content: " *"; color: var(--danger); }
+    input[type="text"], input[type="url"], select, textarea {
+      width: 100%;
+      border: 1px solid #bfc6c4;
+      border-radius: 11px;
+      padding: .82rem .9rem;
+      background: #fffdfa;
+      color: var(--ink);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    textarea { min-height: 110px; resize: vertical; }
+    input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--focus) 35%, transparent);
+      outline-offset: 2px;
+      border-color: var(--focus);
+    }
+    .microcopy { display: block; color: var(--muted); margin-top: 5px; font-size: .88rem; }
+
+    fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+    .chip-group { display: flex; flex-wrap: wrap; gap: 9px; }
+    .chip input { position: absolute; opacity: 0; pointer-events: none; }
+    .chip span {
+      display: inline-flex;
+      min-height: 39px;
+      align-items: center;
+      padding: .55rem .78rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: white;
+      color: #3e5053;
+      font-weight: 700;
+      font-size: .91rem;
+      user-select: none;
+    }
+    .chip input:checked + span { background: var(--teal-soft); border-color: var(--teal); color: var(--teal-dark); box-shadow: inset 0 0 0 1px var(--teal); }
+    .chip input:focus-visible + span { outline: 3px solid color-mix(in srgb, var(--focus) 35%, transparent); outline-offset: 2px; }
+
+    .counter { display: flex; align-items: center; gap: 9px; }
+    .counter button { width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 10px; background: white; font-weight: 900; }
+    .counter output { min-width: 42px; text-align: center; font-weight: 900; font-size: 1.1rem; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      padding: .78rem 1rem;
+      font-weight: 850;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--teal); color: white; }
+    .btn-primary:hover { background: var(--teal-dark); }
+    .btn-secondary { background: white; color: var(--teal-dark); border-color: var(--teal); }
+    .btn-quiet { background: var(--surface-2); color: var(--ink); border-color: var(--border); }
+    .btn-danger { background: white; color: var(--danger); border-color: #deb8ba; }
+
+    .output-box {
+      border: 1px solid var(--border);
+      background: #f9f7f2;
+      border-radius: 13px;
+      padding: 16px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      min-height: 130px;
+      max-height: 390px;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .91rem;
+    }
+    .callout {
+      border-left: 5px solid var(--gold);
+      background: #fff8e8;
+      border-radius: 10px;
+      padding: 13px 15px;
+      margin: 18px 0;
+    }
+    .callout strong { display: block; margin-bottom: 3px; }
+
+    .ai-grid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; margin-top: 16px; }
+    .ai-card {
+      min-height: 95px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: white;
+      padding: 12px;
+      text-align: left;
+      font-weight: 850;
+    }
+    .ai-card small { display: block; color: var(--muted); font-weight: 600; margin-top: 5px; }
+
+    .verify-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .check-card { border: 1px solid var(--border); border-radius: 12px; padding: 13px; background: white; }
+    .check-card label { display: flex; gap: .65rem; align-items: flex-start; margin: 0; }
+    .check-card input { margin-top: .25rem; width: 18px; height: 18px; accent-color: var(--teal); }
+    .score-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin: 18px 0; padding: 14px; border-radius: 12px; background: var(--teal-soft); }
+    .meter { width: 100%; height: 12px; border-radius: 999px; background: #d8dedc; overflow: hidden; }
+    .meter > span { display: block; height: 100%; width: 0; background: var(--teal); transition: width .2s; }
+
+    .embed-preview { aspect-ratio: 16/9; width: 100%; border: 1px solid var(--border); border-radius: 13px; background: #e9eceb; display: grid; place-items: center; overflow: hidden; }
+    .embed-preview iframe { width: 100%; height: 100%; border: 0; }
+    .placeholder { text-align: center; color: var(--muted); padding: 25px; }
+
+    .footer-note { margin-top: 24px; color: var(--muted); font-size: .88rem; text-align: center; }
+    .status { min-height: 1.5em; margin-top: 10px; color: var(--teal-dark); font-weight: 750; }
+    .sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important; }
+
+    @media (max-width: 760px) {
+      .app-shell { width: min(100% - 18px, 1080px); margin-top: 10px; }
+      .stepper { grid-template-columns: repeat(2, 1fr); }
+      .step-tab:nth-child(2) { border-right: 0; }
+      .step-tab:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
+      .field.half, .field.third { grid-column: span 12; }
+      .ai-grid { grid-template-columns: 1fr 1fr; }
+      .verify-list { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+    }
+
+    @media print {
+      body { background: white; }
+      .app-shell { width: 100%; margin: 0; }
+      .hero, .panel { box-shadow: none; }
+      .stepper, .actions, .ai-grid, .footer-note { display: none !important; }
+      .panel { display: block !important; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<main class="app-shell" id="main">
+  <header class="hero">
+    <div class="eyebrow">Educator Media Toolkit</div>
+    <h1>YouTube Video Filter</h1>
+    <p class="subtitle">Describe your instructional need, build a focused search prompt, verify a video for classroom use, and create privacy-enhanced embed code.</p>
+
+    <nav class="stepper" aria-label="Video resource builder steps" role="tablist">
+      <button class="step-tab" id="tab-1" role="tab" aria-selected="true" aria-controls="panel-1" data-step="1"><span class="step-num">1</span>Describe</button>
+      <button class="step-tab" id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" data-step="2"><span class="step-num">2</span>Search</button>
+      <button class="step-tab" id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3" data-step="3"><span class="step-num">3</span>Verify</button>
+      <button class="step-tab" id="tab-4" role="tab" aria-selected="false" aria-controls="panel-4" data-step="4"><span class="step-num">4</span>Get Code</button>
+    </nav>
+  </header>
+
+  <section class="panel" id="panel-1" role="tabpanel" aria-labelledby="tab-1">
+    <div class="panel-head">
+      <div class="panel-icon" aria-hidden="true">📝</div>
+      <div><h2>Step 1 — Describe Your Need</h2><p>Tell the tool what your learners need and how the video will be used.</p></div>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label class="required" for="topic">Topic or subject area</label>
+        <input id="topic" type="text" placeholder="e.g., phishing awareness, fractions, photosynthesis" required />
+        <span class="microcopy">Use a specific concept, standard, skill, or misconception.</span>
+      </div>
+
+      <div class="field half">
+        <label for="activity">Page or activity title</label>
+        <input id="activity" type="text" placeholder="e.g., Week 4 — Recognizing Phishing" />
+      </div>
+      <div class="field half">
+        <label for="objective">Learning objective</label>
+        <input id="objective" type="text" placeholder="e.g., Students will distinguish phishing from legitimate email" />
+      </div>
+
+      <div class="field third">
+        <label class="required" for="audience">Course level / audience</label>
+        <select id="audience" required>
+          <option value="">— select —</option>
+          <option>Elementary school (K–5)</option>
+          <option>Middle school (6–8)</option>
+          <option>High school (9–12)</option>
+          <option>Introductory college</option>
+          <option>Intermediate college</option>
+          <option>Upper-division / advanced</option>
+          <option>Professional / workforce training</option>
+          <option>General / mixed audience</option>
+        </select>
+      </div>
+      <div class="field third">
+        <label for="subject">Discipline</label>
+        <select id="subject">
+          <option>General education</option><option>Arts and humanities</option><option>Business and economics</option><option>Career technical education</option><option>Computer science / cybersecurity</option><option>English language arts</option><option>Health</option><option>Mathematics</option><option>Science</option><option>Social sciences</option><option>World languages</option>
+        </select>
+      </div>
+      <div class="field third">
+        <label for="videoCount">Number of videos</label>
+        <div class="counter" aria-label="Number of videos">
+          <button type="button" id="countMinus" aria-label="Decrease number of videos">−</button>
+          <output id="videoCount" aria-live="polite">3</output>
+          <button type="button" id="countPlus" aria-label="Increase number of videos">+</button>
+        </div>
+      </div>
+
+      <fieldset class="field">
+        <legend>Preferred video length</legend>
+        <div class="chip-group">
+          <label class="chip"><input type="radio" name="length" value="Any length" checked><span>Any length</span></label>
+          <label class="chip"><input type="radio" name="length" value="Under 4 minutes (YouTube short-duration filter)"><span>Under 4 min</span></label>
+          <label class="chip"><input type="radio" name="length" value="4–20 minutes (YouTube medium-duration filter)"><span>4–20 min</span></label>
+          <label class="chip"><input type="radio" name="length" value="Over 20 minutes (YouTube long-duration filter)"><span>Over 20 min</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field half">
+        <legend>Upload date</legend>
+        <div class="chip-group">
+          <label class="chip"><input type="radio" name="date" value="Any upload date" checked><span>Any time</span></label>
+          <label class="chip"><input type="radio" name="date" value="Uploaded today"><span>Today</span></label>
+          <label class="chip"><input type="radio" name="date" value="Uploaded this week"><span>This week</span></label>
+          <label class="chip"><input type="radio" name="date" value="Uploaded this month"><span>This month</span></label>
+          <label class="chip"><input type="radio" name="date" value="Uploaded this year"><span>This year</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field half">
+        <legend>Result type</legend>
+        <div class="chip-group">
+          <label class="chip"><input type="radio" name="type" value="Video" checked><span>Video</span></label>
+          <label class="chip"><input type="radio" name="type" value="Short"><span>Short</span></label>
+          <label class="chip"><input type="radio" name="type" value="Playlist"><span>Playlist</span></label>
+          <label class="chip"><input type="radio" name="type" value="Channel"><span>Channel</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Video priorities <span class="microcopy">Choose all that matter.</span></legend>
+        <div class="chip-group" id="priorities">
+          <label class="chip"><input type="checkbox" value="captions or subtitles"><span>Captions / CC</span></label>
+          <label class="chip"><input type="checkbox" value="a transcript"><span>Transcript</span></label>
+          <label class="chip"><input type="checkbox" value="a reputable and identifiable source"><span>Reputable source</span></label>
+          <label class="chip"><input type="checkbox" value="high production quality"><span>High production value</span></label>
+          <label class="chip"><input type="checkbox" value="diverse and inclusive representation"><span>Diverse perspectives</span></label>
+          <label class="chip"><input type="checkbox" value="animated or illustrated explanations"><span>Animated / illustrated</span></label>
+          <label class="chip"><input type="checkbox" value="Creative Commons licensing"><span>Creative Commons</span></label>
+          <label class="chip"><input type="checkbox" value="HD or 4K resolution"><span>HD / 4K</span></label>
+          <label class="chip"><input type="checkbox" value="chapter markers"><span>Chapters</span></label>
+          <label class="chip"><input type="checkbox" value="no graphic, violent, or age-inappropriate content"><span>Age-appropriate</span></label>
+        </div>
+      </fieldset>
+
+      <div class="field half">
+        <label for="prioritize">Prioritize results by</label>
+        <select id="prioritize">
+          <option>Relevance</option><option>Upload date / newest</option><option>Popularity</option>
+        </select>
+      </div>
+      <div class="field half">
+        <label for="language">Language</label>
+        <input id="language" type="text" value="English" placeholder="e.g., English, Spanish, bilingual" />
+      </div>
+
+      <div class="field">
+        <label for="notes">Anything else?</label>
+        <textarea id="notes" placeholder="e.g., Avoid unexplained jargon. Prefer examples relevant to California students. Avoid sponsored content."></textarea>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" type="button" id="buildPrompt">✨ Build My Search Prompt</button>
+      <button class="btn btn-quiet" type="button" id="loadExample">Load educator example</button>
+      <button class="btn btn-danger" type="button" id="resetAll">Reset</button>
+    </div>
+    <div class="status" id="status1" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" id="panel-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+    <div class="panel-head">
+      <div class="panel-icon" aria-hidden="true">🔎</div>
+      <div><h2>Step 2 — Search with YouTube or AI</h2><p>Use a direct YouTube query or ask an AI assistant to recommend and compare candidate videos.</p></div>
+    </div>
+
+    <label for="searchQuery">YouTube search query</label>
+    <textarea id="searchQuery" aria-describedby="queryHelp"></textarea>
+    <span class="microcopy" id="queryHelp">The direct YouTube search opens in a new tab. Apply YouTube’s on-page Filters menu for upload date, duration, type, and subtitles/CC.</span>
+    <div class="actions">
+      <button class="btn btn-primary" type="button" id="openYouTube">Open YouTube Search</button>
+      <button class="btn btn-secondary" type="button" data-copy="searchQuery">Copy search query</button>
+    </div>
+
+    <div class="callout">
+      <strong>AI verification rule</strong>
+      AI-generated video recommendations can be outdated or fabricated. Open every URL, confirm the title/channel, and complete the verification checklist before assigning the video.
+    </div>
+
+    <label for="aiPrompt">AI research prompt</label>
+    <div class="output-box" id="aiPrompt" tabindex="0"></div>
+    <div class="actions">
+      <button class="btn btn-secondary" type="button" data-copy="aiPrompt">Copy AI prompt</button>
+    </div>
+
+    <h3 style="margin-top:24px">Choose where to run the prompt</h3>
+    <p class="hint">The tool copies your prompt and opens the selected service. Paste it into the new conversation.</p>
+    <div class="ai-grid" aria-label="AI platform choices">
+      <button class="ai-card" data-ai="https://chatgpt.com/">ChatGPT<small>Research and comparison</small></button>
+      <button class="ai-card" data-ai="https://claude.ai/new">Claude<small>Long-form analysis</small></button>
+      <button class="ai-card" data-ai="https://notebooklm.google.com/">NotebookLM<small>Use with your sources</small></button>
+      <button class="ai-card" data-ai="https://gemini.google.com/app">Gemini<small>Google ecosystem</small></button>
+      <button class="ai-card" data-ai="https://copilot.microsoft.com/">Copilot<small>Microsoft ecosystem</small></button>
+    </div>
+    <div class="status" id="status2" role="status" aria-live="polite"></div>
+    <div class="actions"><button class="btn btn-quiet" data-goto="1">Back</button><button class="btn btn-primary" data-goto="3">Continue to Verify</button></div>
+  </section>
+
+  <section class="panel" id="panel-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+    <div class="panel-head">
+      <div class="panel-icon" aria-hidden="true">✅</div>
+      <div><h2>Step 3 — Verify the Video</h2><p>Check instructional quality, safety, accessibility, and technical usability before sharing.</p></div>
+    </div>
+
+    <div class="form-grid">
+      <div class="field half"><label for="videoTitle">Video title</label><input id="videoTitle" type="text" placeholder="Paste the exact title"></div>
+      <div class="field half"><label for="videoUrl">YouTube video URL</label><input id="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..."></div>
+      <div class="field half"><label for="channelName">Channel / creator</label><input id="channelName" type="text" placeholder="Channel name"></div>
+      <div class="field half"><label for="videoDate">Published / updated date</label><input id="videoDate" type="text" placeholder="e.g., March 2026"></div>
+    </div>
+
+    <div class="score-row">
+      <div><strong>Verification score</strong><div class="hint"><span id="verifiedCount">0</span> of <span id="checkTotal">12</span> checks completed</div></div>
+      <div style="min-width:45%;"><div class="meter" role="progressbar" aria-label="Verification progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="meterFill"></span></div></div>
+    </div>
+
+    <div class="verify-list" id="verifyList">
+      <div class="check-card"><label><input type="checkbox"><span><strong>Accurate</strong><br><small>Claims align with current, credible sources.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Authoritative</strong><br><small>The creator’s expertise and organization are identifiable.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Current enough</strong><br><small>The publication date fits the topic’s rate of change.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Instructionally aligned</strong><br><small>The video directly supports the learning objective.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Audience appropriate</strong><br><small>Vocabulary, examples, and pacing fit the learners.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Accessible</strong><br><small>Captions are available and reasonably accurate.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Visually clear</strong><br><small>Text, diagrams, demonstrations, and audio are usable.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Inclusive</strong><br><small>Representation and examples avoid harmful stereotypes.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Classroom safe</strong><br><small>No unexpected violence, profanity, advertising, or mature content.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Links work</strong><br><small>The video is public or unlisted and plays without sign-in barriers.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Embedding allowed</strong><br><small>The video permits playback on third-party websites.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Backup recorded</strong><br><small>A replacement video or alternative resource is available.</small></span></label></div>
+    </div>
+
+    <label for="teacherNotes" style="margin-top:20px">Teacher notes / timestamps / discussion prompts</label>
+    <textarea id="teacherNotes" placeholder="e.g., Start at 1:35. Pause at 4:10 and ask students to identify the warning signs."></textarea>
+
+    <div class="actions"><button class="btn btn-quiet" data-goto="2">Back</button><button class="btn btn-primary" id="toCode">Generate Embed Code</button></div>
+    <div class="status" id="status3" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" id="panel-4" role="tabpanel" aria-labelledby="tab-4" hidden>
+    <div class="panel-head">
+      <div class="panel-icon" aria-hidden="true">&lt;/&gt;</div>
+      <div><h2>Step 4 — Get Privacy-Enhanced Embed Code</h2><p>Create responsive HTML for GitHub Pages, Canvas, or another website.</p></div>
+    </div>
+
+    <div class="callout"><strong>Canvas note</strong>Canvas may sanitize pasted scripts and some HTML. Use the generated iframe in the HTML editor, or host this complete tool on GitHub Pages and embed the published page in Canvas.</div>
+
+    <div class="form-grid">
+      <div class="field half"><label for="startTime">Start time (optional)</label><input id="startTime" type="text" placeholder="e.g., 1:35 or 95 seconds"><span class="microcopy">The code converts minutes:seconds to seconds.</span></div>
+      <div class="field half"><label for="embedTitle">Accessible iframe title</label><input id="embedTitle" type="text" placeholder="Video: Recognizing phishing messages"></div>
+      <fieldset class="field"><legend>Embed options</legend><div class="chip-group">
+        <label class="chip"><input id="privacyMode" type="checkbox" checked><span>Privacy-enhanced mode</span></label>
+        <label class="chip"><input id="showControls" type="checkbox" checked><span>Player controls</span></label>
+        <label class="chip"><input id="allowFullscreen" type="checkbox" checked><span>Allow fullscreen</span></label>
+      </div></fieldset>
+    </div>
+
+    <h3 style="margin:22px 0 10px">Preview</h3>
+    <div class="embed-preview" id="preview"><div class="placeholder">Paste a valid YouTube video URL in Step 3 to preview it here.</div></div>
+
+    <h3 style="margin:22px 0 10px">Responsive embed HTML</h3>
+    <div class="output-box" id="embedCode" tabindex="0"></div>
+    <div class="actions">
+      <button class="btn btn-secondary" type="button" data-copy="embedCode">Copy embed code</button>
+      <button class="btn btn-secondary" type="button" id="downloadBrief">Download teacher brief</button>
+      <button class="btn btn-quiet" type="button" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn btn-quiet" data-goto="3">Back</button>
+    </div>
+    <div class="status" id="status4" role="status" aria-live="polite"></div>
+  </section>
+
+  <p class="footer-note">This tool runs entirely in your browser and does not transmit form data. Verify all videos before assigning them to students.</p>
+</main>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s, root = document) => root.querySelector(s);
+  const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+  const stateKey = 'youtubeVideoFilter2026';
+  let count = 3;
+
+  const tabs = $$('.step-tab');
+  const panels = $$('.panel[role="tabpanel"]');
+
+  function showStep(step) {
+    tabs.forEach(tab => {
+      const active = Number(tab.dataset.step) === Number(step);
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
+    });
+    panels.forEach((panel, i) => panel.hidden = i + 1 !== Number(step));
+    const activePanel = $('#panel-' + step);
+    activePanel.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+    activePanel.querySelector('h2')?.focus?.();
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => showStep(tab.dataset.step));
+    tab.addEventListener('keydown', e => {
+      const idx = tabs.indexOf(tab);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const next = e.key === 'ArrowRight' ? (idx + 1) % tabs.length : (idx - 1 + tabs.length) % tabs.length;
+        tabs[next].focus(); tabs[next].click();
+      }
+    });
+  });
+  $$('[data-goto]').forEach(btn => btn.addEventListener('click', () => showStep(btn.dataset.goto)));
+
+  function selected(name) { return $(`input[name="${name}"]:checked`)?.value || ''; }
+  function checkedValues(selector) { return $$(selector + ' input:checked').map(x => x.value); }
+  function val(id) { return $('#' + id).value.trim(); }
+  function setStatus(id, text) { $('#' + id).textContent = text; }
+
+  function buildQuery() {
+    const topic = val('topic');
+    const audience = val('audience');
+    const objective = val('objective');
+    const language = val('language');
+    const priorities = checkedValues('#priorities');
+    const terms = [topic];
+    if (audience) terms.push(audience.replace(/\(.+?\)/g, '').trim());
+    if (objective) terms.push(objective);
+    if (language && language.toLowerCase() !== 'english') terms.push(language);
+    if (priorities.some(p => p.includes('captions'))) terms.push('captions');
+    if (priorities.some(p => p.includes('transcript'))) terms.push('transcript');
+    return terms.filter(Boolean).join(' ');
+  }
+
+  function buildAIPrompt() {
+    const priorities = checkedValues('#priorities');
+    const audience = val('audience') || 'the selected learners';
+    const topic = val('topic');
+    const activity = val('activity') || 'a classroom learning activity';
+    const objective = val('objective') || `understand ${topic}`;
+    return `Act as an educational media librarian and instructional designer. Find ${count} currently available YouTube ${selected('type').toLowerCase()} resource(s) for ${audience} about “${topic}.”\n\nInstructional context:\n- Activity: ${activity}\n- Discipline: ${val('subject')}\n- Learning objective: ${objective}\n- Preferred length: ${selected('length')}\n- Upload date preference: ${selected('date')}\n- Prioritize by: ${val('prioritize')}\n- Language: ${val('language') || 'English'}\n- Required or preferred qualities: ${priorities.length ? priorities.join(', ') : 'clear explanations, instructional relevance, and reliable sourcing'}\n- Additional constraints: ${val('notes') || 'None'}\n\nFor each recommendation, provide: exact title, channel, working YouTube URL, publication date, runtime, intended audience, a 2–3 sentence instructional summary, why the source is credible, caption/transcript status, potential bias or classroom-safety concern, and one suggested discussion question. Do not invent links or metadata. Clearly mark anything you cannot verify. Prefer videos that permit embedding. End with a comparison table and identify the strongest choice for the stated learning objective.`;
+  }
+
+  function buildAll() {
+    if (!val('topic') || !val('audience')) {
+      setStatus('status1', 'Enter a topic and select an audience before building the prompt.');
+      (!val('topic') ? $('#topic') : $('#audience')).focus();
+      return;
+    }
+    $('#searchQuery').value = buildQuery();
+    $('#aiPrompt').textContent = buildAIPrompt();
+    saveState();
+    setStatus('status1', 'Search prompt created.');
+    showStep(2);
+  }
+
+  $('#buildPrompt').addEventListener('click', buildAll);
+  $('#countMinus').addEventListener('click', () => { count = Math.max(1, count - 1); $('#videoCount').textContent = count; });
+  $('#countPlus').addEventListener('click', () => { count = Math.min(10, count + 1); $('#videoCount').textContent = count; });
+
+  $('#openYouTube').addEventListener('click', () => {
+    const query = $('#searchQuery').value.trim();
+    if (!query) return setStatus('status2', 'Build or enter a search query first.');
+    window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(query), '_blank', 'noopener,noreferrer');
+  });
+
+  async function copyText(text, statusId) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setStatus(statusId, 'Copied to clipboard.');
+    } catch {
+      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove(); setStatus(statusId, 'Copied to clipboard.');
+    }
+  }
+
+  $$('[data-copy]').forEach(btn => btn.addEventListener('click', () => {
+    const el = $('#' + btn.dataset.copy);
+    copyText('value' in el ? el.value : el.textContent, btn.closest('.panel').querySelector('.status').id);
+  }));
+
+  $$('.ai-card').forEach(btn => btn.addEventListener('click', async () => {
+    const prompt = $('#aiPrompt').textContent.trim();
+    if (!prompt) return setStatus('status2', 'Build the AI prompt first.');
+    await copyText(prompt, 'status2');
+    window.open(btn.dataset.ai, '_blank', 'noopener,noreferrer');
+    setStatus('status2', 'Prompt copied. Paste it into the AI service that opened.');
+  }));
+
+  function parseYouTubeId(url) {
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes('youtu.be')) return u.pathname.slice(1).split('/')[0];
+      if (u.pathname.startsWith('/shorts/')) return u.pathname.split('/')[2];
+      if (u.pathname.startsWith('/embed/')) return u.pathname.split('/')[2];
+      return u.searchParams.get('v');
+    } catch { return ''; }
+  }
+
+  function parseTime(text) {
+    const t = text.trim();
+    if (!t) return 0;
+    if (/^\d+$/.test(t)) return Number(t);
+    const parts = t.split(':').map(Number);
+    if (parts.some(Number.isNaN)) return 0;
+    if (parts.length === 2) return parts[0] * 60 + parts[1];
+    if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    return 0;
+  }
+
+  function generateEmbed() {
+    const id = parseYouTubeId(val('videoUrl'));
+    const title = val('embedTitle') || `YouTube video: ${val('videoTitle') || val('topic') || 'instructional resource'}`;
+    const domain = $('#privacyMode').checked ? 'www.youtube-nocookie.com' : 'www.youtube.com';
+    const params = new URLSearchParams();
+    params.set('rel', '0');
+    params.set('controls', $('#showControls').checked ? '1' : '0');
+    const start = parseTime(val('startTime'));
+    if (start) params.set('start', String(start));
+
+    if (!id) {
+      $('#preview').innerHTML = '<div class="placeholder">Paste a valid YouTube watch, Shorts, youtu.be, or embed URL in Step 3.</div>';
+      $('#embedCode').textContent = '<!-- Enter a valid YouTube URL in Step 3 to generate embed code. -->';
+      return false;
+    }
+    const src = `https://${domain}/embed/${id}?${params.toString()}`;
+    const fullscreen = $('#allowFullscreen').checked ? ' allowfullscreen' : '';
+    const code = `<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">\n  <iframe\n    src="${src}"\n    title="${title.replace(/"/g, '&quot;')}"\n    style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"\n    loading="lazy"\n    referrerpolicy="strict-origin-when-cross-origin"\n    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"${fullscreen}>\n  </iframe>\n</div>`;
+    $('#embedCode').textContent = code;
+    $('#preview').innerHTML = `<iframe src="${src}" title="${title.replace(/"/g, '&quot;')}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"${fullscreen}></iframe>`;
+    return true;
+  }
+
+  $('#toCode').addEventListener('click', () => {
+    saveState(); showStep(4);
+    if (generateEmbed()) setStatus('status4', 'Embed code generated.');
+  });
+  ['videoUrl','embedTitle','startTime','privacyMode','showControls','allowFullscreen'].forEach(id => $('#' + id).addEventListener('input', generateEmbed));
+
+  const checks = $$('#verifyList input[type="checkbox"]');
+  $('#checkTotal').textContent = checks.length;
+  function updateScore() {
+    const done = checks.filter(c => c.checked).length;
+    const pct = Math.round(done / checks.length * 100);
+    $('#verifiedCount').textContent = done;
+    $('#meterFill').style.width = pct + '%';
+    $('.meter').setAttribute('aria-valuenow', pct);
+    setStatus('status3', pct === 100 ? 'Verification complete.' : pct >= 75 ? 'Strong progress. Review remaining checks.' : 'Complete the checklist before assigning the video.');
+    saveState();
+  }
+  checks.forEach(c => c.addEventListener('change', updateScore));
+
+  $('#loadExample').addEventListener('click', () => {
+    $('#topic').value = 'recognizing phishing emails and social engineering warning signs';
+    $('#activity').value = 'Cyber Safety — Phishing Detective';
+    $('#objective').value = 'Students will identify at least four indicators of a phishing message';
+    $('#audience').value = 'High school (9–12)';
+    $('#subject').value = 'Computer science / cybersecurity';
+    $('#language').value = 'English';
+    $('#notes').value = 'Avoid fear-based messaging and unexplained jargon. Prefer a classroom-safe example with a clear pause-and-discuss moment.';
+    ['captions or subtitles','a transcript','a reputable and identifiable source','no graphic, violent, or age-inappropriate content'].forEach(v => {
+      const box = $(`#priorities input[value="${CSS.escape(v)}"]`); if (box) box.checked = true;
+    });
+    setStatus('status1', 'Example loaded. Adjust any field, then build the prompt.');
+  });
+
+  $('#resetAll').addEventListener('click', () => {
+    if (!confirm('Clear all fields and saved progress?')) return;
+    localStorage.removeItem(stateKey); location.reload();
+  });
+
+  function saveState() {
+    const data = { count };
+    $$('input, select, textarea').forEach(el => {
+      if (!el.id && !el.name) return;
+      const key = el.id || `${el.name}:${el.value}`;
+      data[key] = (el.type === 'checkbox' || el.type === 'radio') ? el.checked : el.value;
+    });
+    data.verifyChecks = checks.map(c => c.checked);
+    localStorage.setItem(stateKey, JSON.stringify(data));
+  }
+
+  function restoreState() {
+    try {
+      const data = JSON.parse(localStorage.getItem(stateKey));
+      if (!data) return;
+      count = data.count || 3; $('#videoCount').textContent = count;
+      $$('input, select, textarea').forEach(el => {
+        const key = el.id || `${el.name}:${el.value}`;
+        if (!(key in data)) return;
+        if (el.type === 'checkbox' || el.type === 'radio') el.checked = data[key]; else el.value = data[key];
+      });
+      (data.verifyChecks || []).forEach((v,i) => { if (checks[i]) checks[i].checked = v; });
+      updateScore();
+      if (val('topic')) { $('#searchQuery').value = buildQuery(); $('#aiPrompt').textContent = buildAIPrompt(); }
+      generateEmbed();
+    } catch { localStorage.removeItem(stateKey); }
+  }
+
+  $('#downloadBrief').addEventListener('click', () => {
+    const complete = checks.filter(c => c.checked).length;
+    const brief = `YOUTUBE VIDEO TEACHER BRIEF\n\nActivity: ${val('activity')}\nTopic: ${val('topic')}\nAudience: ${val('audience')}\nLearning objective: ${val('objective')}\n\nSelected video\nTitle: ${val('videoTitle')}\nChannel: ${val('channelName')}\nURL: ${val('videoUrl')}\nDate: ${val('videoDate')}\nVerification: ${complete}/${checks.length} checks complete\n\nTeacher notes\n${val('teacherNotes')}\n\nEmbed code\n${$('#embedCode').textContent}\n`;
+    const blob = new Blob([brief], {type:'text/plain'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'youtube-video-teacher-brief.txt'; a.click(); URL.revokeObjectURL(a.href);
+    setStatus('status4', 'Teacher brief downloaded.');
+  });
+
+  $$('input, select, textarea').forEach(el => el.addEventListener('change', saveState));
+  restoreState();
+})();
+</script>
+</body>
+</html>
