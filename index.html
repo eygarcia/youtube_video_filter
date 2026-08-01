@@ -249,6 +249,15 @@
     .check-card { border: 1px solid var(--border); border-radius: 12px; padding: 13px; background: white; }
     .check-card label { display: flex; gap: .65rem; align-items: flex-start; margin: 0; }
     .check-card input { margin-top: .25rem; width: 18px; height: 18px; accent-color: var(--teal); }
+    .hero-top { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+    .guide-link { display:inline-flex; align-items:center; gap:.45rem; padding:10px 14px; border-radius:10px; background:#fff; color:var(--teal-dark); font-weight:800; text-decoration:none; border:1px solid rgba(255,255,255,.75); box-shadow:0 3px 10px rgba(0,0,0,.12); }
+    .guide-link:hover, .guide-link:focus-visible { transform:translateY(-1px); outline:3px solid rgba(255,255,255,.5); outline-offset:2px; }
+    .info-tip { position:relative; display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; margin-left:6px; border-radius:50%; background:var(--teal); color:#fff; font-size:13px; font-weight:900; cursor:help; vertical-align:middle; }
+    .info-tip::after { content:attr(data-tip); position:absolute; z-index:20; left:50%; bottom:calc(100% + 10px); transform:translateX(-50%); width:min(300px, 70vw); padding:10px 12px; border-radius:9px; background:#17252a; color:#fff; font-size:13px; font-weight:500; line-height:1.35; box-shadow:0 8px 24px rgba(0,0,0,.25); opacity:0; visibility:hidden; pointer-events:none; }
+    .info-tip::before { content:""; position:absolute; left:50%; bottom:calc(100% + 4px); transform:translateX(-50%); border:6px solid transparent; border-top-color:#17252a; opacity:0; visibility:hidden; }
+    .info-tip:hover::after, .info-tip:focus::after, .info-tip:hover::before, .info-tip:focus::before { opacity:1; visibility:visible; }
+    .verify-help { margin:0 0 16px; }
+    .optional-label { font-size:.78em; font-weight:700; opacity:.82; }
     .score-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin: 18px 0; padding: 14px; border-radius: 12px; background: var(--teal-soft); }
     .meter { width: 100%; height: 12px; border-radius: 999px; background: #d8dedc; overflow: hidden; }
     .meter > span { display: block; height: 100%; width: 0; background: var(--teal); transition: width .2s; }
@@ -282,21 +291,66 @@
       .stepper, .actions, .ai-grid, .footer-note { display: none !important; }
       .panel { display: block !important; break-inside: avoid; }
     }
-  </style>
+  
+
+    .guide-link { font: inherit; }
+    .help-dialog {
+      width: min(1040px, calc(100% - 24px));
+      max-height: 92vh;
+      padding: 0;
+      border: 0;
+      border-radius: 20px;
+      box-shadow: 0 24px 70px rgba(23,51,58,.32);
+      color: var(--ink);
+      background: #eef4f8;
+    }
+    .help-dialog::backdrop { background: rgba(12,31,36,.62); backdrop-filter: blur(3px); }
+    .help-dialog-head {
+      position: sticky; top: 0; z-index: 5;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 16px 20px; color: white; background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+    }
+    .help-dialog-head h2 { margin: 0; font-size: 1.35rem; }
+    .help-close { border: 1px solid rgba(255,255,255,.65); border-radius: 10px; padding: .6rem .85rem; background: white; color: var(--teal-dark); font-weight: 850; }
+    .help-dialog-body { padding: 18px; overflow: auto; max-height: calc(92vh - 68px); }
+    .help-dialog-body nav { background:#fff;border:1px solid #d7e3ee;border-radius:14px;padding:16px;margin:0 0 18px; }
+    .help-dialog-body nav strong { display:block;margin-bottom:8px; }
+    .help-dialog-body .navlinks { display:flex;flex-wrap:wrap;gap:8px; }
+    .help-dialog-body .navlinks a { background:#f5f9fd;border:1px solid #d7e3ee;padding:7px 10px;border-radius:8px;text-decoration:none; }
+    .help-dialog-body .card { background:#fff;border:1px solid #d7e3ee;border-radius:16px;padding:24px;margin:18px 0;box-shadow:0 4px 16px rgba(18,52,77,.07); }
+    .help-dialog-body .card h2 { font-size:1.55rem;margin-top:0;border-bottom:3px solid #e9f3ff;padding-bottom:8px; }
+    .help-dialog-body .summary { background:#e9f3ff;border-left:6px solid #1565c0; }
+    .help-dialog-body .quick { background:#e8f6ee;border-left:6px solid #258553; }
+    .help-dialog-body .steps { display:grid;grid-template-columns:repeat(4,1fr);gap:12px; }
+    .help-dialog-body .step { background:#fff;border:1px solid #cfe2d7;border-radius:12px;padding:14px; }
+    .help-dialog-body .step b { display:block;color:#1e6c44;margin-bottom:4px; }
+    .help-dialog-body .time { font-weight:700;color:#1e6c44; }
+    .help-dialog-body .note { background:#fff7df;border-left:5px solid #c58a00;padding:14px;border-radius:8px; }
+    .help-dialog-body .table-wrap { overflow-x:auto; }
+    .help-dialog-body table { border-collapse:collapse;width:100%;min-width:720px; }
+    .help-dialog-body th,.help-dialog-body td { border:1px solid #d7e3ee;padding:11px;text-align:left;vertical-align:top; }
+    .help-dialog-body th { background:#eaf3fb; }
+    .help-dialog-body .check { display:grid;grid-template-columns:220px 1fr;gap:14px;padding:13px 0;border-bottom:1px solid #d7e3ee; }
+    .help-dialog-body .check strong { color:#124f84; }
+    .help-dialog-body .small { color:var(--muted);font-size:.94rem; }
+    .help-dialog-body .footer { text-align:center;color:var(--muted);padding:20px; }
+    @media(max-width:760px){.help-dialog-body .steps{grid-template-columns:1fr}.help-dialog-body .check{grid-template-columns:1fr}.help-dialog-body .card{padding:18px}}
+
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
 <main class="app-shell" id="main">
   <header class="hero">
-    <div class="eyebrow">Educator Media Toolkit</div>
+    <div class="hero-top"><div class="eyebrow">Educator Media Toolkit</div><button type="button" class="guide-link help-open" data-help-target="help-executive-summary" aria-haspopup="dialog">❓ Help</button></div>
     <h1>YouTube Video Filter</h1>
     <p class="subtitle">Describe your instructional need, build a focused search prompt, verify a video for classroom use, and create privacy-enhanced embed code.</p>
 
     <nav class="stepper" aria-label="Video resource builder steps" role="tablist">
       <button class="step-tab" id="tab-1" role="tab" aria-selected="true" aria-controls="panel-1" data-step="1"><span class="step-num">1</span>Describe</button>
       <button class="step-tab" id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" data-step="2"><span class="step-num">2</span>Search</button>
-      <button class="step-tab" id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3" data-step="3"><span class="step-num">3</span>Verify</button>
-      <button class="step-tab" id="tab-4" role="tab" aria-selected="false" aria-controls="panel-4" data-step="4"><span class="step-num">4</span>Get Code</button>
+      <button class="step-tab" id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3" data-step="3"><span class="step-num">3</span>Verify <span class="optional-label">(optional)</span></button>
+      <button class="step-tab" id="tab-4" role="tab" aria-selected="false" aria-controls="panel-4" data-step="4"><span class="step-num">4</span>Get Code <span class="optional-label">(optional)</span></button>
     </nav>
   </header>
 
@@ -417,7 +471,6 @@
 
     <div class="actions">
       <button class="btn btn-primary" type="button" id="buildPrompt">✨ Build My Search Prompt</button>
-      <button class="btn btn-quiet" type="button" id="loadExample">Load educator example</button>
       <button class="btn btn-danger" type="button" id="resetAll">Reset</button>
     </div>
     <div class="status" id="status1" role="status" aria-live="polite"></div>
@@ -433,7 +486,7 @@
     <textarea id="searchQuery" aria-describedby="queryHelp"></textarea>
     <span class="microcopy" id="queryHelp">The direct YouTube search opens in a new tab. Apply YouTube’s on-page Filters menu for upload date, duration, type, and subtitles/CC.</span>
     <div class="actions">
-      <button class="btn btn-primary" type="button" id="openYouTube">Open YouTube Search</button>
+      <button class="btn btn-primary" type="button" id="openYouTube">Search YouTube</button>
       <button class="btn btn-secondary" type="button" data-copy="searchQuery">Copy search query</button>
     </div>
 
@@ -474,24 +527,26 @@
       <div class="field half"><label for="videoDate">Published / updated date</label><input id="videoDate" type="text" placeholder="e.g., March 2026"></div>
     </div>
 
+    <p class="verify-help"><button type="button" class="guide-link help-open" data-help-target="help-verification" aria-haspopup="dialog">❓ Open Help: verification details</button></p>
+
     <div class="score-row">
       <div><strong>Verification score</strong><div class="hint"><span id="verifiedCount">0</span> of <span id="checkTotal">12</span> checks completed</div></div>
       <div style="min-width:45%;"><div class="meter" role="progressbar" aria-label="Verification progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="meterFill"></span></div></div>
     </div>
 
     <div class="verify-list" id="verifyList">
-      <div class="check-card"><label><input type="checkbox"><span><strong>Accurate</strong><br><small>Claims align with current, credible sources.</small></span></label></div>
-      <div class="check-card"><label><input type="checkbox"><span><strong>Authoritative</strong><br><small>The creator’s expertise and organization are identifiable.</small></span></label></div>
-      <div class="check-card"><label><input type="checkbox"><span><strong>Current enough</strong><br><small>The publication date fits the topic’s rate of change.</small></span></label></div>
-      <div class="check-card"><label><input type="checkbox"><span><strong>Instructionally aligned</strong><br><small>The video directly supports the learning objective.</small></span></label></div>
-      <div class="check-card"><label><input type="checkbox"><span><strong>Audience appropriate</strong><br><small>Vocabulary, examples, and pacing fit the learners.</small></span></label></div>
-      <div class="check-card"><label><input type="checkbox"><span><strong>Accessible</strong><br><small>Captions are available and reasonably accurate.</small></span></label></div>
-      <div class="check-card"><label><input type="checkbox"><span><strong>Visually clear</strong><br><small>Text, diagrams, demonstrations, and audio are usable.</small></span></label></div>
-      <div class="check-card"><label><input type="checkbox"><span><strong>Inclusive</strong><br><small>Representation and examples avoid harmful stereotypes.</small></span></label></div>
-      <div class="check-card"><label><input type="checkbox"><span><strong>Classroom safe</strong><br><small>No unexpected violence, profanity, advertising, or mature content.</small></span></label></div>
-      <div class="check-card"><label><input type="checkbox"><span><strong>Links work</strong><br><small>The video is public or unlisted and plays without sign-in barriers.</small></span></label></div>
-      <div class="check-card"><label><input type="checkbox"><span><strong>Embedding allowed</strong><br><small>The video permits playback on third-party websites.</small></span></label></div>
-      <div class="check-card"><label><input type="checkbox"><span><strong>Backup recorded</strong><br><small>A replacement video or alternative resource is available.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Accurate</strong><button class="info-tip" type="button" aria-label="More information about Accurate" data-tip="Confirms that facts, demonstrations, dates, and examples are correct. Compare important claims with a trusted textbook, government, university, or professional source.">i</button><br><small>Claims align with current, credible sources.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Authoritative</strong><button class="info-tip" type="button" aria-label="More information about Authoritative" data-tip="Checks who made the video and whether that person or organization has relevant knowledge, experience, or a trustworthy educational role.">i</button><br><small>The creator’s expertise and organization are identifiable.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Current enough</strong><button class="info-tip" type="button" aria-label="More information about Current enough" data-tip="Determines whether the video is recent enough. Fast-changing topics such as technology, laws, health guidance, and software require newer sources.">i</button><br><small>The publication date fits the topic’s rate of change.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Instructionally aligned</strong><button class="info-tip" type="button" aria-label="More information about Instructionally aligned" data-tip="Confirms the video teaches the exact skill or concept students are expected to learn, rather than only mentioning the topic.">i</button><br><small>The video directly supports the learning objective.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Audience appropriate</strong><button class="info-tip" type="button" aria-label="More information about Audience appropriate" data-tip="Checks whether the words, examples, reading level, speed, and assumed background knowledge match your students.">i</button><br><small>Vocabulary, examples, and pacing fit the learners.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Accessible</strong><button class="info-tip" type="button" aria-label="More information about Accessible" data-tip="Checks for usable closed captions or subtitles, understandable audio, and a transcript when needed. Review auto-captions for errors.">i</button><br><small>Captions are available and reasonably accurate.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Visually clear</strong><button class="info-tip" type="button" aria-label="More information about Visually clear" data-tip="Confirms that on-screen text is readable, images are clear, demonstrations can be followed, and audio is easy to hear.">i</button><br><small>Text, diagrams, demonstrations, and audio are usable.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Inclusive</strong><button class="info-tip" type="button" aria-label="More information about Inclusive" data-tip="Checks that people, cultures, identities, and abilities are represented respectfully and that examples do not reinforce harmful stereotypes.">i</button><br><small>Representation and examples avoid harmful stereotypes.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Classroom safe</strong><button class="info-tip" type="button" aria-label="More information about Classroom safe" data-tip="Screens the complete video for profanity, frightening images, violence, mature themes, political persuasion, excessive advertising, or other surprises.">i</button><br><small>No unexpected violence, profanity, advertising, or mature content.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Links work</strong><button class="info-tip" type="button" aria-label="More information about Links work" data-tip="Confirms the exact URL opens, the video has not been removed, students do not need special permission, and playback works on school devices.">i</button><br><small>The video is public or unlisted and plays without sign-in barriers.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Embedding allowed</strong><button class="info-tip" type="button" aria-label="More information about Embedding allowed" data-tip="Checks whether YouTube allows the video to play inside Canvas, a class website, or another page. Some creators disable embedding.">i</button><br><small>The video permits playback on third-party websites.</small></span></label></div>
+      <div class="check-card"><label><input type="checkbox"><span><strong>Backup recorded</strong><button class="info-tip" type="button" aria-label="More information about Backup recorded" data-tip="Encourages saving a second resource in case the selected video is removed, blocked, changed, or becomes unavailable during class.">i</button><br><small>A replacement video or alternative resource is available.</small></span></label></div>
     </div>
 
     <label for="teacherNotes" style="margin-top:20px">Teacher notes / timestamps / discussion prompts</label>
@@ -536,11 +591,198 @@
   <p class="footer-note">This tool runs entirely in your browser and does not transmit form data. Verify all videos before assigning them to students.</p>
 </main>
 
+
+<dialog id="helpDialog" class="help-dialog" aria-labelledby="helpDialogTitle">
+  <div class="help-dialog-head">
+    <h2 id="helpDialogTitle">Educator Media Toolkit Help</h2>
+    <button type="button" class="help-close" id="closeHelp">Close Help</button>
+  </div>
+  <div class="help-dialog-body" id="helpDialogBody">
+    
+<nav class="embedded-help-nav" aria-label="Help topics"><strong>Jump to a section</strong><div class="navlinks">
+<a href="#help-executive-summary">Executive summary</a><a href="#help-quick-start">2-minute quick start</a><a href="#help-examples">Classroom examples</a><a href="#help-describe">Describe</a><a href="#help-search">Search</a><a href="#help-verification">Verify</a><a href="#help-code">Get Code</a><a href="#help-youtube">YouTube search strategies</a><a href="#help-accessibility">Accessibility</a><a href="#help-troubleshooting">Troubleshooting</a>
+</div></nav>
+
+<section class="card summary" id="help-executive-summary">
+<h2>Executive Summary</h2>
+<p>The Educator Media Toolkit turns a teaching need into a focused YouTube search. Instead of typing only a topic such as <em>fractions</em>, a teacher can also specify grade level, learning objective, preferred length, upload date, language, captions, transcript availability, source credibility, and age appropriateness.</p>
+<p>The tool supports three useful search paths:</p>
+<ul><li><strong>Direct YouTube search:</strong> creates a concise query and opens YouTube so the teacher can apply YouTube filters.</li><li><strong>AI-assisted search:</strong> creates a detailed prompt that can be pasted into an AI assistant to request several verified recommendations and a comparison.</li><li><strong>Professional review:</strong> provides 12 verification checks and optional privacy-enhanced embed code for Canvas, GitHub Pages, or another class website.</li></ul>
+<p>Teachers can use only Steps 1 and 2 for a fast search. Steps 3 and 4 are optional when a formal classroom review or embedded video is needed.</p>
+</section>
+
+<section class="card quick" id="help-quick-start">
+<h2>2-Minute Quick Start</h2>
+<p class="time">Goal: find a useful classroom video in about two minutes.</p>
+<div class="steps">
+<div class="step"><b>1. Describe</b>Enter the topic, audience or grade level, and learning objective. Select a preferred video length and any important qualities such as captions.</div>
+<div class="step"><b>2. Build</b>Select <strong>Build My Search Prompt</strong>. The tool creates both a YouTube query and a more detailed AI search prompt.</div>
+<div class="step"><b>3. Search</b>Select <strong>Search YouTube</strong>, or copy the AI prompt into an AI assistant. Open promising videos in separate tabs.</div>
+<div class="step"><b>4. Preview</b>Watch the beginning, middle, and end. Confirm that the language, examples, captions, and content are appropriate for your students.</div>
+</div>
+<p class="note"><strong>Fastest safe practice:</strong> never assign a video based only on its title or thumbnail. Preview the complete video before students see it.</p>
+</section>
+
+
+<section class="card" id="help-examples">
+<h2>Classroom Examples</h2>
+<p>These examples show how teachers at different grade levels can use the Media Toolkit to turn a lesson objective into focused YouTube searches, evaluate the results, and create supporting classroom activities.</p>
+
+<h3>Example 1: Elementary Literacy — Life Lessons from <em>The Little Engine That Could</em></h3>
+<p><strong>Teaching goal:</strong> Help elementary students identify perseverance, positive self-talk, effort, and helping others as central life lessons in the story.</p>
+<div class="table-wrap"><table><thead><tr><th>Toolkit field</th><th>Example entry</th></tr></thead><tbody>
+<tr><td>Topic or subject area</td><td>Life lessons from The Little Engine That Could</td></tr>
+<tr><td>Learning objective</td><td>Students will identify one lesson from the story and support it with an example from a video or read-aloud.</td></tr>
+<tr><td>Audience</td><td>Elementary school, grades 2–3</td></tr>
+<tr><td>Preferred length</td><td>4–10 minutes</td></tr>
+<tr><td>Important qualities</td><td>Captions, clear narration, age-appropriate visuals, transcript, no frightening content</td></tr>
+<tr><td>Suggested YouTube search</td><td><code>Little Engine That Could perseverance lesson grade 3 read aloud captions</code></td></tr>
+</tbody></table></div>
+<p><strong>How to use the results:</strong> Select a read-aloud, animated retelling, or short discussion video. Ask students to identify the challenge, describe what the engine says to itself, and explain how effort changes the outcome.</p>
+<p><strong>Possible learning materials:</strong> theme graphic organizer, character-traits chart, vocabulary list, sequence-of-events activity, reflective writing prompt, and a class discussion question such as, “When have you kept trying even when something was difficult?”</p>
+
+<h3>Example 2: Community College Cybersecurity — Subnetting</h3>
+<p><strong>Teaching goal:</strong> Help introductory networking or cybersecurity students calculate subnet masks, network addresses, broadcast addresses, and usable host ranges.</p>
+<div class="table-wrap"><table><thead><tr><th>Toolkit field</th><th>Example entry</th></tr></thead><tbody>
+<tr><td>Topic or subject area</td><td>IPv4 subnetting for beginners</td></tr>
+<tr><td>Learning objective</td><td>Students will calculate the network address, broadcast address, and valid host range for a given IPv4 prefix.</td></tr>
+<tr><td>Audience</td><td>Introductory community college networking or cybersecurity</td></tr>
+<tr><td>Preferred length</td><td>4–20 minutes</td></tr>
+<tr><td>Important qualities</td><td>Captions, transcript, worked examples, accurate notation, clear diagrams</td></tr>
+<tr><td>Suggested YouTube search</td><td><code>subnetting for beginners worked examples CIDR network broadcast host range</code></td></tr>
+</tbody></table></div>
+<p><strong>How to use the results:</strong> Compare one conceptual explanation with one calculation-focused video. Verify every subnetting example before assigning it, then pause the video before each answer so students can solve the problem independently.</p>
+<p><strong>Possible learning materials:</strong> guided notes, subnetting table, worked example worksheet, Packet Tracer activity, exit ticket, and a discussion question such as, “Why is the broadcast address unavailable for assignment to a host?”</p>
+
+<h3>Example 3: High School Mathematics — Pythagorean Theorem</h3>
+<p><strong>Teaching goal:</strong> Help high school students understand and apply the Pythagorean theorem to find a missing side of a right triangle and solve real-world distance problems.</p>
+<div class="table-wrap"><table><thead><tr><th>Toolkit field</th><th>Example entry</th></tr></thead><tbody>
+<tr><td>Topic or subject area</td><td>Pythagorean theorem and right triangles</td></tr>
+<tr><td>Learning objective</td><td>Students will use a² + b² = c² to calculate a missing side and explain why the theorem applies only to right triangles.</td></tr>
+<tr><td>Audience</td><td>High school geometry or Algebra I</td></tr>
+<tr><td>Preferred length</td><td>4–15 minutes</td></tr>
+<tr><td>Important qualities</td><td>Captions, transcript, visual proof, worked examples, accurate diagrams</td></tr>
+<tr><td>Suggested YouTube search</td><td><code>Pythagorean theorem high school visual proof worked examples right triangles</code></td></tr>
+</tbody></table></div>
+<p><strong>How to use the results:</strong> Select one video that visually explains why the theorem works and another that demonstrates several calculations. Pause before each solution, have students identify the hypotenuse, and require them to estimate whether their answer is reasonable.</p>
+<p><strong>Possible learning materials:</strong> vocabulary preview, labeled-triangle worksheet, error-analysis activity, real-world ladder or map-distance problem, exit ticket, and a discussion question such as, “How can you tell which side must be labeled <em>c</em>?”</p>
+
+<p class="note"><strong>Professional practice:</strong> Use the AI search prompt to collect candidate videos, but verify the live YouTube page, captions, calculations, source credibility, and classroom suitability before adding a resource to a lesson.</p>
+</section>
+
+<section class="card" id="help-describe"><h2>Step 1: Describe Your Need</h2>
+<p>This screen creates the search criteria. More specific entries produce more focused results.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>How to use it</th><th>Example</th></tr></thead><tbody>
+<tr><td>Topic or subject area</td><td>Name the exact concept, skill, standard, or misconception.</td><td>Equivalent fractions using visual models</td></tr>
+<tr><td>Page or activity title</td><td>Optional label for the lesson, module, or assignment.</td><td>Week 4 — Comparing Fractions</td></tr>
+<tr><td>Learning objective</td><td>State what students should know or do after viewing.</td><td>Students will compare two fractions with unlike denominators.</td></tr>
+<tr><td>Course level / audience</td><td>Select the learner group. For elementary use, select Elementary school (K–5) and mention the exact grade in the topic or notes.</td><td>Elementary school (K–5); Grade 3</td></tr>
+<tr><td>Preferred video length</td><td>Match the video to the available class time and student attention needs.</td><td>4–20 minutes</td></tr>
+<tr><td>Upload date</td><td>Use a recent date for changing topics. Any time is often appropriate for stable concepts.</td><td>This year for software; Any time for basic multiplication</td></tr>
+<tr><td>Video priorities</td><td>Select qualities that matter, including captions, transcript, reputable source, animation, and age appropriateness.</td><td>Captions, transcript, animated, age-appropriate</td></tr>
+<tr><td>Prioritize results by</td><td>Choose relevance, recency, or popularity.</td><td>Relevance for most lessons</td></tr>
+<tr><td>Anything else?</td><td>Add constraints that are not represented elsewhere.</td><td>Avoid unexplained vocabulary; use diverse examples</td></tr>
+</tbody></table></div></section>
+
+<section class="card" id="help-search"><h2>Step 2: Search with YouTube or AI</h2>
+<h3>Search YouTube</h3><p>The button opens a standard YouTube search based on the topic and selected criteria. After YouTube opens, use its <strong>Filters</strong> menu to narrow by duration, upload date, type, and subtitles or closed captions.</p>
+<h3>Use the AI search prompt</h3><p>The detailed prompt asks an AI assistant to find several videos and report exact titles, channels, URLs, dates, runtimes, audiences, summaries, credibility, captions, transcript status, safety concerns, embedding status, and discussion questions. The prompt also asks the assistant not to invent missing metadata.</p>
+<h3>Recommended workflow</h3><ol><li>Open direct YouTube results to see a broad selection.</li><li>Use the AI prompt when you need a documented comparison or sources for a lesson plan.</li><li>Open each candidate on YouTube and independently verify its current availability and classroom suitability.</li></ol>
+</section>
+
+<section class="card" id="help-verification"><h2>Step 3: Verify the Video</h2>
+<p>Verification is optional in the tool but strongly recommended before assigning any video. Each information icon beside a check gives a brief explanation. The expanded explanations are below.</p>
+<div class="check"><strong>Accurate</strong><span>Confirm that facts, demonstrations, dates, labels, calculations, and examples are correct. Compare important claims with a current textbook, government agency, university, museum, professional association, or other trusted source.</span></div>
+<div class="check"><strong>Authoritative</strong><span>Identify the creator and organization. Look for relevant credentials, teaching experience, professional expertise, or an established educational mission. Popularity alone does not establish authority.</span></div>
+<div class="check"><strong>Current enough</strong><span>Judge whether the publication date is suitable for the topic. Technology, health guidance, law, news, public policy, and software often require recent videos. Stable topics such as basic arithmetic can use older resources.</span></div>
+<div class="check"><strong>Instructionally aligned</strong><span>Confirm that the video teaches the exact learning objective. A video can be interesting and accurate but still fail to model the skill students are expected to perform.</span></div>
+<div class="check"><strong>Audience appropriate</strong><span>Review vocabulary, reading level, pacing, humor, examples, assumed background knowledge, and length. For younger learners, prefer clear narration, concrete examples, uncluttered visuals, and short segments.</span></div>
+<div class="check"><strong>Accessible</strong><span>Turn captions on and inspect their accuracy. Check audio clarity, speaking pace, important on-screen text, color contrast, and whether a transcript is available. Automatic captions can misrepresent names and technical terms.</span></div>
+<div class="check"><strong>Visually clear</strong><span>Make sure labels are readable on classroom displays and mobile devices. Check that diagrams, demonstrations, and screen recordings remain understandable when viewed at normal size.</span></div>
+<div class="check"><strong>Inclusive</strong><span>Review whether people, cultures, identities, families, and abilities are represented respectfully. Avoid resources that rely on stereotypes or present one group as the universal norm.</span></div>
+<div class="check"><strong>Classroom safe</strong><span>Watch the entire video for profanity, violence, frightening imagery, mature themes, unsafe demonstrations, persuasive political messaging, product promotion, or unexpected advertising.</span></div>
+<div class="check"><strong>Links work</strong><span>Open the exact URL on a school device when practical. Confirm that the video has not been removed, made private, age-restricted, geographically blocked, or placed behind a sign-in requirement.</span></div>
+<div class="check"><strong>Embedding allowed</strong><span>Some creators prevent their videos from playing inside Canvas or another website. Test the generated embed code before publishing the lesson.</span></div>
+<div class="check"><strong>Backup recorded</strong><span>Save a second video, article, image sequence, or teacher explanation. YouTube videos can be removed, renamed, edited, blocked, or made private without notice.</span></div>
+</section>
+
+<section class="card" id="help-code"><h2>Step 4: Get Code</h2>
+<p>This optional screen creates responsive YouTube iframe code.</p><ul>
+<li><strong>Start time:</strong> begins playback at a selected point, such as <code>1:35</code>.</li>
+<li><strong>Accessible iframe title:</strong> describes the video to screen-reader users. Use a meaningful title rather than “YouTube video.”</li>
+<li><strong>Privacy-enhanced mode:</strong> uses YouTube’s privacy-enhanced domain.</li>
+<li><strong>Player controls:</strong> lets students pause, replay, change captions, and control volume.</li>
+<li><strong>Fullscreen:</strong> allows students to enlarge detailed visuals.</li>
+</ul><p class="note"><strong>Canvas:</strong> paste the iframe in the Canvas HTML editor. Canvas can remove scripts and unsupported markup. Test the published page using Student View.</p></section>
+
+<section class="card" id="help-youtube"><h2>Strategies for Better YouTube Searches</h2>
+<p>Combine the concept with the grade, task, visual approach, and desired format.</p>
+<div class="table-wrap"><table><thead><tr><th>Need</th><th>Search pattern</th></tr></thead><tbody>
+<tr><td>Elementary explanation</td><td><code>water cycle grade 3 animation explanation</code></td></tr>
+<tr><td>Worked mathematics example</td><td><code>equivalent fractions grade 3 visual model worked examples</code></td></tr>
+<tr><td>Short review</td><td><code>main idea grade 3 review under 10 minutes</code></td></tr>
+<tr><td>Hands-on science</td><td><code>simple machines elementary classroom demonstration</code></td></tr>
+<tr><td>Captions</td><td>Apply YouTube’s subtitles/CC filter, then manually inspect caption accuracy.</td></tr>
+<tr><td>Trusted organizations</td><td>Add the organization or source type: <code>NASA</code>, <code>museum</code>, <code>university</code>, or <code>public media</code>.</td></tr>
+</tbody></table></div>
+<p class="small">YouTube search results and filters change over time. Always verify the live video and metadata.</p></section>
+
+<section class="card" id="help-accessibility"><h2>Accessibility and Elementary Classroom Practices</h2><ul>
+<li>Enable captions and review them for accuracy before class.</li><li>Provide a transcript or equivalent text-based learning resource when needed.</li><li>Avoid videos that communicate essential information only through color, sound, or rapidly changing visuals.</li><li>Use player controls so students can pause and replay.</li><li>Introduce unfamiliar vocabulary before viewing.</li><li>Break longer videos into shorter segments with a question or activity between segments.</li><li>Provide a clear purpose for watching, such as “Listen for three causes of erosion.”</li><li>Use Student View in Canvas to test playback, keyboard access, mobile display, and captions.</li>
+</ul></section>
+
+<section class="card" id="help-troubleshooting"><h2>Troubleshooting</h2>
+<div class="table-wrap"><table><thead><tr><th>Problem</th><th>Action</th></tr></thead><tbody>
+<tr><td>The YouTube search is too broad.</td><td>Add the exact grade, learning objective, desired visual format, and one important constraint.</td></tr>
+<tr><td>The AI provides an incorrect link or metadata.</td><td>Open the YouTube page and verify every important field. Replace unverifiable information with “Not verified.”</td></tr>
+<tr><td>The video does not play inside Canvas.</td><td>Confirm embedding is allowed, use the Canvas HTML editor, and test the iframe in Student View. Provide the direct YouTube link as a backup.</td></tr>
+<tr><td>Captions are inaccurate.</td><td>Select another video, provide a corrected transcript, or prepare an equivalent accessible resource.</td></tr>
+<tr><td>The video includes advertisements or suggested videos.</td><td>Preview the complete viewing experience, use privacy-enhanced embedding, and prepare a direct instructional transition when playback ends.</td></tr>
+
+</tbody></table></div></section>
+
+<footer class="footer">Educator Media Toolkit Help • Designed for quick classroom use and professional media review
+  <button class="info-tip" type="button" aria-label="Contact Ed Garcia with improvement suggestions" data-tip="Send suggestions for improvements to Ed Garcia — egarcia@vcccd.edu.">i</button>
+</footer>
+
+  </div>
+</dialog>
+
 <script>
 (() => {
   'use strict';
+
   const $ = (s, root = document) => root.querySelector(s);
   const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+
+  const helpDialog = $('#helpDialog');
+  const closeHelp = $('#closeHelp');
+  let helpReturnFocus = null;
+
+  function openHelp(targetId = 'help-executive-summary') {
+    helpReturnFocus = document.activeElement;
+    if (typeof helpDialog.showModal === 'function') helpDialog.showModal();
+    else helpDialog.setAttribute('open', '');
+    requestAnimationFrame(() => {
+      const target = document.getElementById(targetId);
+      if (target) target.scrollIntoView({block:'start'});
+      closeHelp.focus();
+    });
+  }
+  function closeHelpDialog() {
+    if (typeof helpDialog.close === 'function') helpDialog.close();
+    else helpDialog.removeAttribute('open');
+    helpReturnFocus?.focus?.();
+  }
+  $$('.help-open').forEach(btn => btn.addEventListener('click', () => openHelp(btn.dataset.helpTarget)));
+  closeHelp.addEventListener('click', closeHelpDialog);
+  helpDialog.addEventListener('click', e => {
+    const box = helpDialog.getBoundingClientRect();
+    const outside = e.clientX < box.left || e.clientX > box.right || e.clientY < box.top || e.clientY > box.bottom;
+    if (outside) closeHelpDialog();
+  });
+  helpDialog.addEventListener('close', () => helpReturnFocus?.focus?.());
+
   const stateKey = 'youtubeVideoFilter2026';
   let count = 3;
 
@@ -710,19 +952,6 @@
   }
   checks.forEach(c => c.addEventListener('change', updateScore));
 
-  $('#loadExample').addEventListener('click', () => {
-    $('#topic').value = 'recognizing phishing emails and social engineering warning signs';
-    $('#activity').value = 'Cyber Safety — Phishing Detective';
-    $('#objective').value = 'Students will identify at least four indicators of a phishing message';
-    $('#audience').value = 'High school (9–12)';
-    $('#subject').value = 'Computer science / cybersecurity';
-    $('#language').value = 'English';
-    $('#notes').value = 'Avoid fear-based messaging and unexplained jargon. Prefer a classroom-safe example with a clear pause-and-discuss moment.';
-    ['captions or subtitles','a transcript','a reputable and identifiable source','no graphic, violent, or age-inappropriate content'].forEach(v => {
-      const box = $(`#priorities input[value="${CSS.escape(v)}"]`); if (box) box.checked = true;
-    });
-    setStatus('status1', 'Example loaded. Adjust any field, then build the prompt.');
-  });
 
   $('#resetAll').addEventListener('click', () => {
     if (!confirm('Clear all fields and saved progress?')) return;
