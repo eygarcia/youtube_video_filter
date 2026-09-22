@@ -1,288 +1,239 @@
-# youtube_video_filter
-Use this reusable prompt:
+# YouTube Video Filter for Educators
 
----
+An accessible, browser-based tool that helps educators find, evaluate, and embed instructional YouTube videos. The application converts a teaching need into a focused YouTube search, produces an AI-assisted research prompt, guides the educator through a verification checklist, and generates privacy-enhanced responsive embed code for Canvas or another learning platform.
 
-**Reusable Prompt: Interactive Educational HTML Tool**
+## Live Application
 
-You are an expert Canvas instructional designer and front-end developer with expertise in HTML5, CSS, JavaScript, accessibility, and educational technology.
+**Launch the tool:** [https://eygarcia.github.io/youtube_video_filter/](https://eygarcia.github.io/youtube_video_filter/)
 
-Review the attached diagram, screenshot, document, or existing webpage and build a new interactive educational tool that has a similar visual structure and workflow, but uses original design, wording, and code.
+## Purpose
 
-The tool should be titled:
+Finding a video is easy. Selecting a video that is accurate, accessible, age-appropriate, instructionally aligned, and safe for classroom use requires a deliberate review process.
 
-**[INSERT TOOL NAME]**
+This tool helps educators:
 
-Purpose:
+- Describe a learning objective and intended audience.
+- Create a focused YouTube search query.
+- Generate a detailed research prompt for an AI assistant.
+- Evaluate candidate videos using a structured checklist.
+- Confirm captions, credibility, accessibility, and classroom suitability.
+- Create responsive YouTube embed code for Canvas.
+- Use YouTube’s privacy-enhanced `youtube-nocookie.com` domain.
 
-**[DESCRIBE WHAT THE TOOL SHOULD HELP USERS DO]**
+## Four-Step Workflow
 
-Target audience:
+### 1. Describe
 
-**[ELEMENTARY / MIDDLE SCHOOL / HIGH SCHOOL / COLLEGE / UNIVERSITY / WORKFORCE]**
+Enter the instructional topic, subject, audience, learning objective, activity type, preferred duration, language, upload-date preference, and desired video qualities.
 
-Use the attached reference and this webpage as inspiration:
+### 2. Search
 
-**[INSERT REFERENCE URL]**
+The tool creates:
 
-Do not copy the original source code. Create an original version with improved usability, accessibility, and instructional value.
+- A focused YouTube search query.
+- A detailed AI research prompt requesting multiple recommendations and a comparison.
+- Quick links for ChatGPT, Claude, NotebookLM, Gemini, and Microsoft Copilot.
 
-### Technical requirements
+AI recommendations must be verified by opening the live YouTube page. AI systems can return outdated titles, incorrect metadata, or nonexistent links.
 
-Create one self-contained `.html` file using:
+### 3. Verify
 
-* HTML5
-* Embedded CSS
-* Embedded JavaScript
-* No external libraries unless essential
-* No server or database requirements
-* No API key requirements unless clearly identified
-* Compatibility with GitHub Pages
-* Compatibility with embedding in Canvas through an iframe
-* Responsive layout for desktop, tablet, and mobile
-* Accessible keyboard navigation
-* Visible focus indicators
-* Semantic labels and headings
-* Appropriate color contrast
-* Reduced-motion support
-* Screen-reader-friendly status messages
+Review the candidate video for:
 
-### Tool workflow
+- Instructional alignment
+- Accuracy and currency
+- Source credibility
+- Bias and balanced representation
+- Age appropriateness
+- Caption quality and accessibility
+- Advertising and distracting content
+- Copyright considerations
+- Embedding permissions
+- Availability of a backup resource
 
-Organize the tool as a guided multi-step panel:
+### 4. Get Code
 
-1. **[STEP 1 NAME]**
-2. **[STEP 2 NAME]**
-3. **[STEP 3 NAME]**
-4. **[STEP 4 NAME]**
+Generate and preview responsive iframe code that can be placed in:
 
-Include:
+- Canvas assignments, pages, discussions, or modules
+- GitHub Pages
+- Classroom websites
+- Other systems that support iframe embedding
 
-* Progress navigation
-* Form fields and dropdown menus
-* Selectable filter buttons
-* Helpful examples and field descriptions
-* Required-field validation
-* Previous and Next buttons
-* Reset button
-* Copy-to-clipboard buttons
-* Print or save-as-PDF option
-* Local browser saving using `localStorage`
-* A polished completion screen
+The generator supports privacy-enhanced mode, optional start time, player controls, fullscreen settings, accessible iframe titles, copy-to-clipboard, and print/save-to-PDF.
 
-### Educational enhancements
+## Key Features
 
-Add features that improve the original concept, including:
+- One self-contained `index.html` file
+- No server, database, build process, or API key required
+- Responsive desktop, tablet, and mobile layout
+- Keyboard-accessible navigation
+- Visible focus indicators
+- Screen-reader-friendly labels and status updates
+- Reduced-motion support
+- Local browser saving with `localStorage`
+- Built-in help and classroom examples
+- Search-prompt and embed-code copy buttons
+- Privacy-enhanced YouTube embedding
+- Canvas-oriented instructions and troubleshooting
 
-* Explanations written for educators
-* Tooltips or help text
-* Examples for different grade levels
-* Accessibility and privacy considerations
-* A verification or quality-review checklist
-* A scoring or progress indicator
-* Downloadable or copyable results
-* Instructions for using the results in Canvas
-* Safety reminders appropriate to the audience
+## Technology
 
-### AI prompt support
+- HTML5
+- Embedded CSS
+- Vanilla JavaScript
+- Browser `localStorage`
+- YouTube and `youtube-nocookie.com` URLs
 
-Include an option allowing the user to generate and copy a prompt for:
+No third-party JavaScript libraries are required.
 
-* ChatGPT
-* Claude
-* Gemini
-* Microsoft Copilot
-* NotebookLM
+## Repository Structure
 
-When an AI platform is selected:
+```text
+youtube_video_filter/
+├── index.html
+└── README.md
+```
 
-* Generate a platform-neutral prompt
-* Clearly display the prompt
-* Provide a Copy Prompt button
-* Provide an Open Platform button where technically practical
-* Do not claim that the tool directly submits information to the selected AI service
+## GitHub Pages Deployment
 
-### Research requirements
+1. Place `index.html` and `README.md` in the repository root.
+2. Open the repository’s **Settings**.
+3. Select **Pages**.
+4. Under **Build and deployment**, select **Deploy from a branch**.
+5. Select the `main` branch and `/ (root)` folder.
+6. Select **Save**.
+7. Allow GitHub Pages a few minutes to publish the application.
 
-Review current official documentation related to:
+Expected address:
 
-**[INSERT TOPIC, SERVICE, OR PLATFORM]**
+```text
+https://eygarcia.github.io/youtube_video_filter/
+```
+
+## Canvas Integration
+
+### Option 1: Add a Link
 
-Use official documentation to identify available filters, settings, limitations, accessibility features, privacy considerations, and recommended practices. Incorporate the useful findings into the tool.
+Add the live GitHub Pages address to a Canvas module, page, assignment, or discussion:
 
-### Output requirements
+```text
+https://eygarcia.github.io/youtube_video_filter/
+```
 
-Before finalizing:
+### Option 2: Embed the Complete Tool
 
-* Test all buttons and navigation
-* Check for JavaScript errors
-* Confirm that generated text and code can be copied
-* Verify the layout at mobile widths
-* Verify that the tool works after being opened locally
-* Remove broken placeholder links
-* Add code comments for major sections
+Open the Canvas HTML editor and add:
+
+```html
+<iframe
+  src="https://eygarcia.github.io/youtube_video_filter/"
+  title="YouTube Video Filter for Educators"
+  width="100%"
+  height="900"
+  loading="lazy"
+  style="border:1px solid #cccccc; border-radius:8px;"
+  allowfullscreen>
+</iframe>
+```
 
-Provide:
+After publishing, use **Student View** to test keyboard access, mobile layout, scrolling, and browser privacy restrictions.
 
-1. The completed downloadable `.html` file
-2. A concise summary of features
-3. GitHub Pages publishing instructions
-4. Canvas iframe embedding instructions
-5. Any limitations or API requirements
+Canvas administrators can restrict external iframe sources through institutional security settings.
 
-Take your time and produce a polished, classroom-ready result.
+## Privacy and Data Handling
 
----
+- Form information is stored only in the user’s browser through `localStorage`.
+- The application does not use a database or transmit form contents to a server.
+- Selecting an AI platform opens that service in a new tab.
+- The educator must paste the generated prompt into the selected AI service manually.
+- Privacy-enhanced video embedding uses `youtube-nocookie.com`.
+- Educators should still follow institutional privacy and student-data policies.
+- Do not enter confidential student information into the tool or an AI prompt.
 
-### Version tailored to your YouTube tool
+## Accessibility Review
 
-You can reuse this shorter version:
+Before assigning a video:
 
-> Review the attached YouTube Video Filter diagram and build an original, self-contained HTML5 tool called **YouTube Video Filter for Educators**. Use embedded CSS and JavaScript and make it compatible with GitHub Pages and Canvas iframe embedding.
->
-> Create a guided workflow that helps elementary, middle school, high school, college, university, and workforce educators:
->
-> 1. Describe the video they need
-> 2. Select YouTube search filters
-> 3. Generate a search or AI research prompt
-> 4. Verify the video for instructional use
-> 5. Generate privacy-enhanced Canvas embed code
->
-> Include filters for topic, audience, duration, upload date, content type, captions, transcript, licensing, resolution, source credibility, production quality, perspectives, language, and age appropriateness.
->
-> Add AI prompt options for ChatGPT, Claude, Gemini, Copilot, and NotebookLM. Include copy buttons and links to open the selected service, but do not claim that the prompt is submitted automatically.
->
-> Add a teacher verification checklist covering accuracy, bias, captions, accessibility, advertising, comments, copyright, age appropriateness, source credibility, learning-objective alignment, and privacy.
->
-> Generate YouTube privacy-enhanced embed code using `youtube-nocookie.com`, with an optional start time, preview, copy button, and Canvas-ready responsive iframe code.
->
-> Include local browser saving, reset, print/PDF, keyboard accessibility, responsive design, reduced-motion support, visible focus indicators, validation, progress tracking, and clear educator instructions.
->
-> Review current official YouTube documentation before building the tool. Create original code rather than copying the reference website. Test the completed HTML and provide it as a downloadable file along with GitHub Pages and Canvas publishing instructions.
-
-Save this wording in a Word document or a text file under a title such as **Master Prompt – Interactive Canvas HTML Tool**.
-*****************************************************************************************************************************
-Reusable Prompt: Interactive Educational HTML Tool
+- Enable and inspect captions for accuracy.
+- Provide a transcript or equivalent text resource when required.
+- Confirm that essential information is not communicated only through sound, color, or rapidly changing visuals.
+- Use a meaningful iframe title.
+- Allow students to pause, replay, and control playback.
+- Test the completed Canvas page with keyboard navigation.
+- Test the published activity using Canvas Student View.
+- Provide an alternative resource when required by an accommodation.
 
-You are an expert Canvas instructional designer and front-end developer with expertise in HTML5, CSS, JavaScript, accessibility, and educational technology.
+## Responsible AI Use
 
-Review the attached diagram, screenshot, document, or existing webpage and build a new interactive educational tool that has a similar visual structure and workflow, but uses original design, wording, and code.
+The generated AI prompt is intended to help locate and compare candidate videos. It does not independently verify that a recommended video exists or is appropriate.
 
-The tool should be titled:
+Educators should:
 
-[INSERT TOOL NAME]
+- Open every recommended URL.
+- Verify the exact title and channel.
+- Confirm the publication date and runtime.
+- Review the complete video.
+- Inspect caption accuracy.
+- Evaluate the source’s credibility.
+- Check for bias, advertising, and age-inappropriate material.
+- Confirm that embedding is permitted.
+- Maintain a backup instructional resource.
 
-Purpose:
+## Troubleshooting
 
-[DESCRIBE WHAT THE TOOL SHOULD HELP USERS DO]
+| Problem | Recommended action |
+|---|---|
+| GitHub Pages displays a 404 error | Confirm Pages is enabled for the `main` branch and `/ (root)` folder. |
+| The page displays the wrong application | Confirm the YouTube Filter’s `index.html` is in this repository, not the main portfolio file. |
+| A video will not play in Canvas | Confirm the creator permits embedding and provide the direct YouTube link as a backup. |
+| YouTube results are too broad | Add the audience, learning objective, desired format, and important constraints. |
+| An AI assistant provides a broken link | Open YouTube and independently verify the title, channel, URL, runtime, and publication date. |
+| Changes do not appear immediately | Wait several minutes and perform a hard refresh with `Ctrl+F5`. |
+| The page shows an older version | Clear the browser cache or open the site in a private browsing window. |
+| Copy-to-clipboard does not work | Confirm that the browser permits clipboard access, or manually select and copy the generated text. |
+| The generated iframe disappears in Canvas | Paste it through the Canvas HTML editor and confirm institutional iframe restrictions. |
 
-Target audience:
+## Updating the Application
 
-[ELEMENTARY / MIDDLE SCHOOL / HIGH SCHOOL / COLLEGE / UNIVERSITY / WORKFORCE]
+The application is contained in one file:
 
-Use the attached reference and this webpage as inspiration:
+```text
+index.html
+```
 
-[INSERT REFERENCE URL]
+To publish an updated version:
 
-Do not copy the original source code. Create an original version with improved usability, accessibility, and instructional value.
+1. Open the repository.
+2. Select `index.html`.
+3. Select the pencil-shaped **Edit** button.
+4. Replace or update the code.
+5. Select **Commit changes**.
+6. Allow GitHub Pages several minutes to rebuild the site.
+7. Refresh the published application using `Ctrl+F5`.
 
-Technical requirements
+Do not replace `index.html` with the main GitHub portfolio page. The portfolio should be stored separately in the `eygarcia.github.io` repository.
 
-Create one self-contained .html file using:
+## Educational Use
 
-HTML5
-Embedded CSS
-Embedded JavaScript
-No external libraries unless essential
-No server or database requirements
-No API key requirements unless clearly identified
-Compatibility with GitHub Pages
-Compatibility with embedding in Canvas through an iframe
-Responsive layout for desktop, tablet, and mobile
-Accessible keyboard navigation
-Visible focus indicators
-Semantic labels and headings
-Appropriate color contrast
-Reduced-motion support
-Screen-reader-friendly status messages
-Tool workflow
+This project is designed for instructional use by educators and students. Always review third-party videos for:
 
-Organize the tool as a guided multi-step panel:
+- Accuracy
+- Accessibility
+- Copyright
+- Privacy
+- Advertising
+- Source credibility
+- Bias
+- Age appropriateness
+- Alignment with the course learning objective
 
-[STEP 1 NAME]
-[STEP 2 NAME]
-[STEP 3 NAME]
-[STEP 4 NAME]
+YouTube content can be removed, renamed, edited, restricted, or made private without notice. Maintain a backup resource for important lessons.
 
-Include:
+## Author
 
-Progress navigation
-Form fields and dropdown menus
-Selectable filter buttons
-Helpful examples and field descriptions
-Required-field validation
-Previous and Next buttons
-Reset button
-Copy-to-clipboard buttons
-Print or save-as-PDF option
-Local browser saving using localStorage
-A polished completion screen
-Educational enhancements
+**Edmond Garcia**  
+Computer Network Systems Engineering and Cybersecurity  
+Moorpark College
 
-Add features that improve the original concept, including:
-
-Explanations written for educators
-Tooltips or help text
-Examples for different grade levels
-Accessibility and privacy considerations
-A verification or quality-review checklist
-A scoring or progress indicator
-Downloadable or copyable results
-Instructions for using the results in Canvas
-Safety reminders appropriate to the audience
-AI prompt support
-
-Include an option allowing the user to generate and copy a prompt for:
-
-ChatGPT
-Claude
-Gemini
-Microsoft Copilot
-NotebookLM
-
-When an AI platform is selected:
-
-Generate a platform-neutral prompt
-Clearly display the prompt
-Provide a Copy Prompt button
-Provide an Open Platform button where technically practical
-Do not claim that the tool directly submits information to the selected AI service
-Research requirements
-
-Review current official documentation related to:
-
-[INSERT TOPIC, SERVICE, OR PLATFORM]
-
-Use official documentation to identify available filters, settings, limitations, accessibility features, privacy considerations, and recommended practices. Incorporate the useful findings into the tool.
-
-Output requirements
-
-Before finalizing:
-
-Test all buttons and navigation
-Check for JavaScript errors
-Confirm that generated text and code can be copied
-Verify the layout at mobile widths
-Verify that the tool works after being opened locally
-Remove broken placeholder links
-Add code comments for major sections
-
-Provide:
-
-The completed downloadable .html file
-A concise summary of features
-GitHub Pages publishing instructions
-Canvas iframe embedding instructions
-Any limitations or API requirements
-
-Take your time and produce a polished, classroom-ready result.
+GitHub: [https://github.com/eygarcia](https://github.com/eygarcia)
